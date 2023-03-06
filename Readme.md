@@ -1,3 +1,31 @@
+### Step 0
+
+**기본 지식**
+
+- DataInput/DataOutput
+  - Java에서 primitive type, String을 바이트 스트림으로 변환하여 입출력
+  - FilterOutputStream을 상속받는 DataInputStream, DataOutputStream 클래스를 사용하면 추가 기능을 사용할 수 있다.
+
+
+- DataOutputStream, ByteArrayOutputStream, FileOutputStream
+
+|구분|특징|기타|
+|----|----|---|
+|DataOutputStream|기본 자료형 및 String을 바이너리 코드로 쓸 때 사용 |기본 자료형, String -> 파일|
+|ByteArrayOutputStream|바이트 배열 메모리 버퍼에 데이터를 쓴다. 메모리 버퍼를 사용하기 때문에 파일이 아닌 바이트 배열에 데이터를 쓸 수 있다.|이미지, 바이너리 데이터 -> 바이트 배열|
+|FileOutputStream|파일에 대한 FileDescriptor를 열어서 파일에 바이트 스트림으로 데이터를 쓸 수 있다.|파일에 데이터|
+
+
+- RandomAccessFile
+  - 파일의 원하는 위치로 이동(`seek()`)해서 데이터를 읽고 쓸 수 있다.
+  - ThreadSafe하지 않다.
+  - 모드
+    - r : 읽기 전용
+    - rw : 읽고 쓰기
+    - rws : 읽고 쓰기 모드로 파일을 열고, 변경 사항은 파일과 동기화
+    - rwd : 읽고 쓰기 모드로 파일을 열고, 변경 사항은 파일의 데이터 부분에 대해서만 동기화
+---
+
 ### Step 1
 
 **요구 사항** 
