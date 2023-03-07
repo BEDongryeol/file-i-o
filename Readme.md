@@ -90,7 +90,7 @@
 
 **결과**
 
-> 1.에이전트에서 보내는 데이터 클래스 생성
+> 1. 에이전트에서 보내는 데이터 클래스 생성
 - 같은 타입의 parameter가 있어 작성 시 실수를 방지하기 위해 dto를 parameter로 넘김
   - long : projectCode, time
   - int : agentId, status
