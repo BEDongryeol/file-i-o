@@ -20,12 +20,13 @@ import java.nio.file.Files;
 @Repository
 public class RequestLogRepository {
 
-    public void save(String fileName, RequestLogPack log) {
+    public Boolean save(String fileName, RequestLogPack log) {
         File file = FileLoader.loadByFileName(fileName);
         DataWriter dataWriter = DataWriter.typeOfByteArray();
         log.write(dataWriter);
 
         FileWriter.save(file, dataWriter.toByteArray(), true);
+        return file.exists();
     }
 
     public RequestLogPack read(String requestFileName) throws IOException {
