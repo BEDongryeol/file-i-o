@@ -1,8 +1,11 @@
 package io.whatap.controller;
 
-import io.whatap.data.RequestLogPack;
+import io.whatap.controller.message.response.ContentMessage;
+import io.whatap.controller.message.response.FlagMessage;
+import io.whatap.data.AbstractPack;
 import io.whatap.dto.RequestPackDTO;
 import io.whatap.service.RequestLogService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,14 +27,18 @@ public class RequestLogController {
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> writeRequestLog(@RequestBody RequestPackDTO requestPackDTO) {
-        requestLogService.writeRequest(requestPackDTO);
-        return ResponseEntity.ok(true);
+    public ResponseEntity<FlagMessage> writeRequestLog(@RequestBody RequestPackDTO requestPackDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new FlagMessage(
+                        requestLogService.writeRequest(requestPackDTO)
+                ));
     }
 
     @GetMapping
-    public ResponseEntity<RequestLogPack> readRequestLog() throws IOException {
-        RequestLogPack requestPackDTO = requestLogService.readRequest();
-        return ResponseEntity.ok(requestPackDTO);
+    public ResponseEntity<ContentMessage<AbstractPack>> readRequestLog() throws IOException {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ContentMessage<>(
+                        requestLogService.readRequest()
+                ));
     }
 }

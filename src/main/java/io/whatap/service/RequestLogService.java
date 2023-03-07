@@ -23,9 +23,9 @@ public class RequestLogService {
         this.requestLogRepository = requestLogRepository;
     }
 
-    public void writeRequest(RequestPackDTO dto) {
+    public Boolean writeRequest(RequestPackDTO dto) {
         RequestLogPack log = RequestLogPack.valueOf(dto);
-        requestLogRepository.save(REQUEST_FILE_NAME, log);
+        return requestLogRepository.save(REQUEST_FILE_NAME, log);
     }
 
     public RequestLogPack readRequest() throws IOException {
