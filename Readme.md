@@ -101,6 +101,7 @@
 - Response 시 결과에 맞는 응답을 내려주기 위해 ResponseMessage interface 생성
   - ErrorMessage 등 추후 추가 예정
   - 응답 메시지 관리용 enum MessageCode 추가
+- 3번의 FileLoader에서 IOException 발생 시 catch하여 `FileLoadException(custom exception)` throw 
   
 > 3. Repository에서 File 조회시 발생하는 중복 코드 처리
 - io.whatap.io.support.FileLoader
