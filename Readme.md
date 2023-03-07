@@ -80,3 +80,33 @@
     - File, byte[], boolean append를 인자로 갖는다
     - File이 없으면 canonical path를 생성하여, 파일을 생성
     - append를 true로 지정하면 파일을 이어서 작성
+
+---
+
+### Step2
+
+**요구 사항**
+- 컬럼에 맞는 데이터 클래스를 정의하고, 클래스에 정보를 Write, Read하는 API 작성
+
+**결과**
+
+> 1.에이전트에서 보내는 데이터 클래스 생성
+- 같은 타입의 parameter가 있어 작성 시 실수를 방지하기 위해 dto를 parameter로 넘김
+  - long : projectCode, time
+  - int : agentId, status
+- test code 작성을 위한 All Args constructor 추가
+  - AbstractPackDTO에도 AllArgsConstructor 추가 (protected)
+
+> 2. 파일이 없을 때 FileNotFoundException이 발생하는 것을 ExceptionHandler로 처리
+- Response 시 결과에 맞는 응답을 내려주기 위해 ResponseMessage interface 생성
+  - ErrorMessage 등 추후 추가 예정
+  - 응답 메시지 관리용 enum MessageCode 추가
+  
+> 3. Repository에서 File 조회시 발생하는 중복 코드 처리
+- io.whatap.io.support.FileLoader
+
+> 4. 새로운 db 파일 (log-request.db) 생성
+- 기존 db 파일에 저장되는 데이터와 길이가 다르기 때문에 별도 파일에 데이터 저장
+
+> 5. 테스트 코드 추가
+   - 에이전트에서 와탭 서버로 전송되는 객체 <-> byte[] 변환 테스트 
