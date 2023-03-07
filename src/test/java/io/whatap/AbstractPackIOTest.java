@@ -2,7 +2,9 @@ package io.whatap;
 
 import io.whatap.data.AbstractPack;
 import io.whatap.data.ApplicationLogPack;
+import io.whatap.data.RequestLogPack;
 import io.whatap.data.ServerLogPack;
+import io.whatap.dto.RequestPackDTO;
 import io.whatap.io.DataReader;
 import io.whatap.io.DataWriter;
 import io.whatap.service.AbstractLogService;
@@ -18,34 +20,7 @@ public class AbstractPackIOTest {
     private final long line = 1200;
 
     private final int status = 404;
-    private final int responseTime = 1234;
-
-    @Test
-    public void 애플리케이션_로그_객체를_바이트_배열로_전환하고_복원할_수_있다(){
-        ApplicationLogPack before = new ApplicationLogPack(projectCode, agentId, time, content, line);
-        DataWriter dataWriter = DataWriter.typeOfByteArray();
-        before.write(dataWriter);
-        byte[] bytes = dataWriter.toByteArray();
-        DataReader dataReader = DataReader.typeOfByteArray(bytes);
-        AbstractPack after = ApplicationLogPack.create(dataReader);
-
-        assertEqualsAbstractPack(before, after);
-        assertEqualsApplicationLogPack(before, after);
-    }
-
-    @Test
-    public void 사버_로그_객체를_바이트_배열로_전환하고_복원할_수_있다(){
-        String fileName = AbstractLogService.SERVER_FILE_NAME;
-        ServerLogPack before = new ServerLogPack(projectCode, agentId, time, content, fileName, line);
-        DataWriter dataWriter = DataWriter.typeOfByteArray();
-        before.write(dataWriter);
-        byte[] bytes = dataWriter.toByteArray();
-        DataReader dataReader = DataReader.typeOfByteArray(bytes);
-        AbstractPack after = ServerLogPack.create(dataReader);
-
-        assertEqualsAbstractPack(before, after);
-        assertEqualsServerLogPack(before, after);
-    }
+    private final long responseTime = 1234;
 
     private static void assertEqualsAbstractPack(AbstractPack before, AbstractPack after) {
         assertNotNull(before);
@@ -77,5 +52,56 @@ public class AbstractPackIOTest {
         assertEquals(beforeCasted.getContent(), afterCasted.getContent());
         assertEquals(beforeCasted.getFileName(), afterCasted.getFileName());
         assertEquals(beforeCasted.getLine(), afterCasted.getLine());
+    }
+
+    private static void assertEqualsRequestLogPack(AbstractPack before, AbstractPack after) {
+        assertTrue(before instanceof RequestLogPack);
+        assertTrue(after instanceof RequestLogPack);
+
+        RequestLogPack beforeCasted = (RequestLogPack) before;
+        RequestLogPack afterCasted = (RequestLogPack) after;
+
+        assertEquals(beforeCasted.getStatus(), afterCasted.getStatus());
+        assertEquals(beforeCasted.getResponseTime(), afterCasted.getResponseTime());
+    }
+
+    @Test
+    public void 애플리케이션_로그_객체를_바이트_배열로_전환하고_복원할_수_있다() {
+        ApplicationLogPack before = new ApplicationLogPack(projectCode, agentId, time, content, line);
+        DataWriter dataWriter = DataWriter.typeOfByteArray();
+        before.write(dataWriter);
+        byte[] bytes = dataWriter.toByteArray();
+        DataReader dataReader = DataReader.typeOfByteArray(bytes);
+        AbstractPack after = ApplicationLogPack.create(dataReader);
+
+        assertEqualsAbstractPack(before, after);
+        assertEqualsApplicationLogPack(before, after);
+    }
+
+    @Test
+    public void 서버_로그_객체를_바이트_배열로_전환하고_복원할_수_있다() {
+        String fileName = AbstractLogService.SERVER_FILE_NAME;
+        ServerLogPack before = new ServerLogPack(projectCode, agentId, time, content, fileName, line);
+        DataWriter dataWriter = DataWriter.typeOfByteArray();
+        before.write(dataWriter);
+        byte[] bytes = dataWriter.toByteArray();
+        DataReader dataReader = DataReader.typeOfByteArray(bytes);
+        AbstractPack after = ServerLogPack.create(dataReader);
+
+        assertEqualsAbstractPack(before, after);
+        assertEqualsServerLogPack(before, after);
+    }
+
+    @Test
+    public void 와탭_서버로_전송되는_객체를_바이트_배열로_전환_하고_복원할_수_있다() {
+        RequestLogPack before = RequestLogPack.valueOf(new RequestPackDTO(projectCode, agentId, time, status, responseTime));
+        DataWriter dataWriter = DataWriter.typeOfByteArray();
+        before.write(dataWriter);
+        byte[] bytes = dataWriter.toByteArray();
+        DataReader dataReader = DataReader.typeOfByteArray(bytes);
+        AbstractPack after = RequestLogPack.create(dataReader);
+
+        assertEqualsAbstractPack(before, after);
+        assertEqualsRequestLogPack(before, after);
     }
 }
