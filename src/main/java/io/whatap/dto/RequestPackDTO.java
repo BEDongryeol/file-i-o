@@ -10,8 +10,10 @@ import lombok.Getter;
 @Getter
 public class RequestPackDTO extends AbstractPackDTO {
 
-    private final int status;
-    private final long responseTime;
+    private int status;
+    private long responseTime;
+
+    private RequestPackDTO() {};
 
     public RequestPackDTO(long projectCode, int agentId, long time, int status, long responseTime) {
         super(projectCode, agentId, time);
