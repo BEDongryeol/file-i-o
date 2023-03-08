@@ -1,7 +1,7 @@
 package io.whatap.controller.message.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.whatap.util.DateTimeUtil;
+import io.whatap.common.util.DateTimeUtil;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

@@ -1,10 +1,10 @@
-package io.whatap.data.support;
+package io.whatap.common.io.support;
 
 import io.whatap.data.AbstractPack;
 import io.whatap.data.ApplicationLogPack;
 import io.whatap.data.RequestLogPack;
 import io.whatap.data.ServerLogPack;
-import io.whatap.data.exception.IllegalDataTypeException;
+import io.whatap.common.data.exception.IllegalDataTypeException;
 import lombok.Getter;
 
 import java.lang.reflect.Field;

@@ -1,6 +1,6 @@
 package io.whatap.io;
 
-import io.whatap.io.exception.DataIOException;
+import io.whatap.common.io.exception.DataIOException;
 
 import java.io.*;
 

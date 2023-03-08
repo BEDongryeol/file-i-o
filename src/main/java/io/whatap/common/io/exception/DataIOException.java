@@ -1,4 +1,4 @@
-package io.whatap.io.exception;
+package io.whatap.common.io.exception;
 
 public class DataIOException extends RuntimeException {
     public DataIOException() {
