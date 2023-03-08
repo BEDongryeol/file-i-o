@@ -1,4 +1,4 @@
-package io.whatap.io.support;
+package io.whatap.common.io.support;
 
 import lombok.Getter;
 
