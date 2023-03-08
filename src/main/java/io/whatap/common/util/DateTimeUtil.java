@@ -1,4 +1,4 @@
-package io.whatap.util;
+package io.whatap.common.util;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

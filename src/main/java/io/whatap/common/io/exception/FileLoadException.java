@@ -1,4 +1,4 @@
-package io.whatap.io.exception;
+package io.whatap.common.io.exception;
 
 /**
  * Copyright whatap Inc since 2023/03/07
