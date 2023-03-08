@@ -29,9 +29,10 @@ public class LogControllerAdvice extends ResponseEntityExceptionHandler {
             FileLoadException.class
     })
     public ResponseEntity<? extends ResponseMessage> repositoryExceptionHandler(Exception e, HttpServletRequest request) {
-        log.error("messageCode : {} ----- message : {} ----- method : {}, ----- request URI : {}",
+        log.error("messageCode : {} ----- message : {} ----- exception : {} ----- method : {}, ----- request URI : {}",
                 MessageCode.REPOSITORY_LAYER_EXCEPTION.getCode(),
                 MessageCode.REPOSITORY_LAYER_EXCEPTION.applyMessage(e.getMessage()),
+                e.getClass().getSimpleName(),
                 request.getMethod(),
                 request.getRequestURI()
         );
@@ -47,9 +48,10 @@ public class LogControllerAdvice extends ResponseEntityExceptionHandler {
             OutOfRangeException.class
     })
     public ResponseEntity<? extends ResponseMessage> serviceExceptionHandler(Exception e, HttpServletRequest request) {
-        log.error("messageCode : {} ----- message : {} ----- method : {}, ----- request URI : {}",
+        log.error("messageCode : {} ----- message : {} ----- exception : {} ----- method : {}, ----- request URI : {}",
                 MessageCode.SERVICE_LAYER_EXCEPTION.getCode(),
                 MessageCode.SERVICE_LAYER_EXCEPTION.applyMessage(e.getMessage()),
+                e.getClass().getSimpleName(),
                 request.getMethod(),
                 request.getRequestURI()
         );
