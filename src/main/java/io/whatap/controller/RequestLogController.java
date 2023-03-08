@@ -17,7 +17,7 @@ import java.io.IOException;
  * Email : inwoo.server@gmail.com
  */
 @RestController
-@RequestMapping("/log/write/request")
+@RequestMapping("/log/request")
 public class RequestLogController {
 
     private final RequestLogService requestLogService;
@@ -39,6 +39,14 @@ public class RequestLogController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ContentMessage<>(
                         requestLogService.readRequest()
+                ));
+    }
+
+    @GetMapping("/{index}")
+    public ResponseEntity<ContentMessage<AbstractPack>> readRequestLog(@PathVariable int index) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ContentMessage<>(
+                        requestLogService.readRequestAt(index)
                 ));
     }
 }
