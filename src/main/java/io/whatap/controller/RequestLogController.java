@@ -4,7 +4,7 @@ import io.whatap.controller.message.response.ContentMessage;
 import io.whatap.controller.message.response.FlagMessage;
 import io.whatap.data.AbstractPack;
 import io.whatap.dto.RequestPackDTO;
-import io.whatap.service.RequestLogService;
+import io.whatap.service.AbstractLogService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,17 +20,17 @@ import java.io.IOException;
 @RequestMapping("/log/request")
 public class RequestLogController {
 
-    private final RequestLogService requestLogService;
+    private final AbstractLogService abstractLogService;
 
-    public RequestLogController(RequestLogService requestLogService) {
-        this.requestLogService = requestLogService;
+    public RequestLogController(AbstractLogService abstractLogService) {
+        this.abstractLogService = abstractLogService;
     }
 
     @PostMapping
     public ResponseEntity<FlagMessage> writeRequestLog(@RequestBody RequestPackDTO requestPackDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new FlagMessage(
-                        requestLogService.writeRequest(requestPackDTO)
+                        abstractLogService.writeRequest(requestPackDTO)
                 ));
     }
 
@@ -38,7 +38,7 @@ public class RequestLogController {
     public ResponseEntity<ContentMessage<AbstractPack>> readRequestLog() throws IOException {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ContentMessage<>(
-                        requestLogService.readRequest()
+                        abstractLogService.readRequest()
                 ));
     }
 
@@ -46,7 +46,7 @@ public class RequestLogController {
     public ResponseEntity<ContentMessage<AbstractPack>> readRequestLog(@PathVariable int index) throws IOException {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ContentMessage<>(
-                        requestLogService.readRequestAt(index)
+                        abstractLogService.readRequestAt(index)
                 ));
     }
 }
