@@ -1,4 +1,6 @@
-### Step 0
+<details>
+<summary>Step 0</summary>
+<div markdown="1">
 
 **기본 지식**
 
@@ -24,9 +26,13 @@
     - rw : 읽고 쓰기
     - rws : 읽고 쓰기 모드로 파일을 열고, 변경 사항은 파일과 동기화
     - rwd : 읽고 쓰기 모드로 파일을 열고, 변경 사항은 파일의 데이터 부분에 대해서만 동기화
----
 
-### Step 1
+</div>
+</details>
+
+<details>
+<summary>Step 1</summary>
+<div markdown="1">
 
 **요구 사항** 
 
@@ -81,9 +87,12 @@
     - File이 없으면 canonical path를 생성하여, 파일을 생성
     - append를 true로 지정하면 파일을 이어서 작성
 
----
+</div>
+</details>
 
-### Step2
+<details>
+<summary>Step 2</summary>
+<div markdown="1">
 
 **요구 사항**
 - 컬럼에 맞는 데이터 클래스를 정의하고, 클래스에 정보를 Write, Read하는 API 작성
@@ -110,4 +119,28 @@
 - 기존 db 파일에 저장되는 데이터와 길이가 다르기 때문에 별도 파일에 데이터 저장
 
 > 5. 테스트 코드 추가
-   - 에이전트에서 와탭 서버로 전송되는 객체 <-> byte[] 변환 테스트 
+   - 에이전트에서 와탭 서버로 전송되는 객체 <-> byte[] 변환 테스트
+</div>
+</details>
+
+<details>
+<summary>Step 3</summary>
+<div markdown="1">
+
+**요구 사항**
+- 샘플데이터와 같은 포멧의 데이터가 여러 개 저장되어 있을 때, 특정 순서의 데이터 조회
+
+**결과**
+- 고정 길이 구하기
+  - AbstractPack 자식 클래스의 고정 길이를 구하여 byte[]을 생성해주는 ByteArrayProvider 생성
+- 특정 순서의 데이터 조회
+  - file.seek()
+    - parameter : `생성된 바이트 배열의 길이 * 특정순서(index)`
+  - file.readFully()
+    - 고정 길이만큼 데이터 읽기를 시도
+    - read()를 사용하면 파일 끝에 도달하면 -1이 return
+    - readFully()는 EOFException 발생
+    - 데이터를 고정 길이만큼 읽지 못하고, -1이 발생하면 의도치 않은 객체가 생성될 수 있으므로 readFully() 사용
+
+</div>
+</details>
