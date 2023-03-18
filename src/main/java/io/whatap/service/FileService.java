@@ -1,8 +1,9 @@
 package io.whatap.service;
 
-import io.whatap.data.RequestLogPack;
-import io.whatap.data.ServerLogPack;
-import io.whatap.io.FileReader;
+import io.whatap.common.io.support.ByteLengthProvider;
+import io.whatap.io.file.BinarySearchSupport;
+import io.whatap.io.file.FixedLengthReader;
+import io.whatap.io.file.SequentialReader;
 import io.whatap.repository.FileRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,18 +27,30 @@ public class FileService {
     }
 
     public byte[] readAll(String fileName) throws IOException {
-        File file = fileRepository.loadFileByName(fileName);
-        return FileReader.readAll(Files.newInputStream(file.toPath()));
+        File file = fileRepository.getFile(fileName);
+        return SequentialReader.readAll(Files.newInputStream(file.toPath()));
     }
 
-    public byte[] readRequestLogAt(String fileName, int index) {
-        RandomAccessFile randomAccessFile = fileRepository.loadRandomAccessFileByNameReadOnly(fileName);
-        return FileReader.readBytesAt(randomAccessFile, index, RequestLogPack.class);
+    public byte[] readRequestLogByIndex(String fileName, int index) {
+        RandomAccessFile randomAccessFile = fileRepository.getRandomAccessFile(fileName);
+        return FixedLengthReader.readByIndex(randomAccessFile, index, ByteLengthProvider.REQUEST_LOG_PACK);
     }
 
-    public byte[] readServerLogAt(String fileName, int index) {
-        RandomAccessFile randomAccessFile = fileRepository.loadRandomAccessFileByNameReadOnly(fileName);
-        return FileReader.readBytesAt(randomAccessFile, index, ServerLogPack.class);
+    public byte[] readRequestLogByTime(String fileName, long time) {
+        RandomAccessFile randomAccessFile = fileRepository.getRandomAccessFile(fileName);
+        BinarySearchSupport binarySearchSupport = BinarySearchSupport.valueOf(randomAccessFile, ByteLengthProvider.REQUEST_LOG_PACK);
+        return binarySearchSupport.readByTime(time);
+    }
+
+    public byte[] readRequestLogsFromIndexTo(String fileName, int startIndex, int count) {
+        RandomAccessFile randomAccessFile = fileRepository.getRandomAccessFile(fileName);
+        return FixedLengthReader.readAllFromIndexTo(randomAccessFile.getChannel(), startIndex, count, ByteLengthProvider.REQUEST_LOG_PACK);
+    }
+
+    public byte[] readRequestLogsByTimeBetween(String fileName, long startTime, long endTime) {
+        RandomAccessFile randomAccessFile = fileRepository.getRandomAccessFile(fileName);
+        BinarySearchSupport binarySearchSupport = BinarySearchSupport.valueOf(randomAccessFile, ByteLengthProvider.REQUEST_LOG_PACK);
+        return binarySearchSupport.readLogsByTimeBetween(startTime, endTime);
     }
 
 }
