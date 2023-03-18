@@ -1,10 +1,10 @@
 package io.whatap.repository;
 
 import io.whatap.data.ServerLogPack;
-import io.whatap.io.DataReader;
-import io.whatap.io.DataWriter;
-import io.whatap.io.FileReader;
-import io.whatap.io.FileWriter;
+import io.whatap.io.data.DataReader;
+import io.whatap.io.data.DataWriter;
+import io.whatap.io.file.FileWriter;
+import io.whatap.io.file.SequentialReader;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +27,7 @@ public class ServerLogRepository {
     public ServerLogPack read(String fileName) throws IOException {
         ClassPathResource resource = new ClassPathResource(fileName);
         File file = resource.getFile();
-        byte[] bytes = FileReader.readAll(Files.newInputStream(file.toPath()));
+        byte[] bytes = SequentialReader.readAll(Files.newInputStream(file.toPath()));
         DataReader dataReader = DataReader.typeOfByteArray(bytes);
         return ServerLogPack.create(dataReader);
     }

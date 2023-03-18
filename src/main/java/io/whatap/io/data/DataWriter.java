@@ -1,4 +1,4 @@
-package io.whatap.io;
+package io.whatap.io.data;
 
 import io.whatap.common.io.exception.DataIOException;
 

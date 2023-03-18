@@ -1,6 +1,8 @@
 package io.whatap.common.io.exception;
 
 public class DataIOException extends RuntimeException {
+    private static final long serialVersionUID = 6340681008460201233L;
+
     public DataIOException() {
     }
 

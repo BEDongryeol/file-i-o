@@ -1,13 +1,14 @@
 package io.whatap.repository;
 
-import io.whatap.data.RequestLogPack;
-import io.whatap.io.DataReader;
-import io.whatap.io.DataWriter;
-import io.whatap.io.FileWriter;
+import io.whatap.data.RequestLogPackLength;
+import io.whatap.io.data.DataReader;
+import io.whatap.io.data.DataWriter;
+import io.whatap.io.file.FileWriter;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Copyright whatap Inc since 2023/03/06
@@ -23,8 +24,8 @@ public class RequestLogRepository {
         this.fileRepository = fileRepository;
     }
 
-    public Boolean save(String fileName, RequestLogPack log) {
-        File file = fileRepository.loadFileByName(fileName);
+    public Boolean save(String fileName, RequestLogPackLength log) {
+        File file = fileRepository.getFile(fileName);
 
         DataWriter dataWriter = DataWriter.typeOfByteArray();
         log.write(dataWriter);
@@ -33,9 +34,14 @@ public class RequestLogRepository {
         return file.exists();
     }
 
-    public RequestLogPack read(byte[] bytes) throws IOException {
+    public RequestLogPackLength read(byte[] bytes) {
         DataReader dataReader = DataReader.typeOfByteArray(bytes);
-        return RequestLogPack.create(dataReader);
+        return RequestLogPackLength.create(dataReader);
+    }
+
+    public List<RequestLogPackLength> readLogs(byte[] bytes) {
+        DataReader dataReader = DataReader.typeOfByteArray(bytes);
+        return RequestLogPackLength.createLogs(dataReader);
     }
 
 }

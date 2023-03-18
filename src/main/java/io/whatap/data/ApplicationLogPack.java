@@ -1,11 +1,12 @@
 package io.whatap.data;
 
-import io.whatap.io.DataReader;
-import io.whatap.io.DataWriter;
+import io.whatap.io.data.DataReader;
+import io.whatap.io.data.DataWriter;
 import lombok.Getter;
 
 @Getter
 public class ApplicationLogPack extends AbstractPack {
+
     private String content; // 로그 본문
     private long line; // 같은 시간에 수집된 라인 중 몇 번째 라인인지
 
@@ -36,4 +37,5 @@ public class ApplicationLogPack extends AbstractPack {
         this.content = dr.readString();
         this.line = dr.readLong();
     }
+
 }

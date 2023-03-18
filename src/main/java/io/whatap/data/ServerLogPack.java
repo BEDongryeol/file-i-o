@@ -1,11 +1,12 @@
 package io.whatap.data;
 
-import io.whatap.io.DataReader;
-import io.whatap.io.DataWriter;
+import io.whatap.io.data.DataReader;
+import io.whatap.io.data.DataWriter;
 import lombok.Getter;
 
 @Getter
 public class ServerLogPack extends AbstractPack {
+
     private String content; // 로그 본문
     private String fileName; // 로그가 수집된 파일 이름
     private long line; // 파일에서 몇 번째 라인인지
@@ -40,4 +41,5 @@ public class ServerLogPack extends AbstractPack {
         this.fileName = dr.readString();
         this.line = dr.readLong();
     }
+
 }

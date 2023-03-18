@@ -1,17 +1,22 @@
 package io.whatap.data;
 
 import io.whatap.data.ifs.IPack;
-import io.whatap.io.DataReader;
-import io.whatap.io.DataWriter;
+import io.whatap.io.data.DataReader;
+import io.whatap.io.data.DataWriter;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public abstract class AbstractPack implements IPack {
+
     private long time; // 로그가 생성된 시간
     private long projectCode; // 프로젝트 번호
     private int agentId; // 에이전트 아이디
 
-    protected AbstractPack(){}
+    protected AbstractPack() {
+    }
+
     public AbstractPack(long time, long projectCode, int agentId) {
         this.time = time;
         this.projectCode = projectCode;
@@ -31,4 +36,5 @@ public abstract class AbstractPack implements IPack {
         this.projectCode = dr.readLong();
         this.agentId = dr.readInt();
     }
+
 }
