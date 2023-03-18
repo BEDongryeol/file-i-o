@@ -10,6 +10,7 @@ import io.whatap.repository.ServerLogRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class AbstractLogService {
@@ -61,8 +62,23 @@ public class AbstractLogService {
         return requestLogRepository.read(bytes);
     }
 
-    public RequestLogPack readRequestAt(int index) throws IOException {
-        byte[] bytes = fileService.readRequestLogAt(REQUEST_FILE_NAME, index);
+    public RequestLogPack readRequestLogAt(int index) {
+        byte[] bytes = fileService.readRequestLogByIndex(REQUEST_FILE_NAME, index);
         return requestLogRepository.read(bytes);
+    }
+
+    public RequestLogPack readRequestLogByTime(long time) {
+        byte[] bytes = fileService.readRequestLogByTime(REQUEST_FILE_NAME, time);
+        return requestLogRepository.read(bytes);
+    }
+
+    public List<RequestLogPack> readRequestLogsFromTo(int startIndex, int count) {
+        byte[] bytes = fileService.readRequestLogsFromIndexTo(REQUEST_FILE_NAME, startIndex, count);
+        return requestLogRepository.readLogs(bytes);
+    }
+
+    public List<RequestLogPack> readRequestLogsByTimeBetween(long startTime, long endTime) {
+        byte[] bytes = fileService.readRequestLogsByTimeBetween(REQUEST_FILE_NAME, startTime, endTime);
+        return requestLogRepository.readLogs(bytes);
     }
 }
