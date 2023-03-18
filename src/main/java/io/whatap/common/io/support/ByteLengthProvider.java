@@ -3,7 +3,7 @@ package io.whatap.common.io.support;
 import io.whatap.common.data.exception.IllegalDataTypeException;
 import io.whatap.data.AbstractPack;
 import io.whatap.data.FixedLengthAbstractPack;
-import io.whatap.data.RequestLogPackLength;
+import io.whatap.data.RequestLogPack;
 import lombok.Getter;
 
 import java.lang.reflect.Field;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 public class ByteLengthProvider {
 
     private static final int SUPER_CLASS = getAbstractPackDataLength();
-    public static final int REQUEST_LOG_PACK = getDataLength(RequestLogPackLength.class);
+    public static final int REQUEST_LOG_PACK = getDataLength(RequestLogPack.class);
 
     private static int getDataLength(Class<? extends FixedLengthAbstractPack> type) {
         Integer byteSize = Arrays.stream(type.getDeclaredFields())

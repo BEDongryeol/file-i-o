@@ -1,13 +1,12 @@
 package io.whatap.repository;
 
-import io.whatap.data.RequestLogPackLength;
+import io.whatap.data.RequestLogPack;
 import io.whatap.io.data.DataReader;
 import io.whatap.io.data.DataWriter;
 import io.whatap.io.file.FileWriter;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public class RequestLogRepository {
         this.fileRepository = fileRepository;
     }
 
-    public Boolean save(String fileName, RequestLogPackLength log) {
+    public Boolean save(String fileName, RequestLogPack log) {
         File file = fileRepository.getFile(fileName);
 
         DataWriter dataWriter = DataWriter.typeOfByteArray();
@@ -34,14 +33,14 @@ public class RequestLogRepository {
         return file.exists();
     }
 
-    public RequestLogPackLength read(byte[] bytes) {
+    public RequestLogPack read(byte[] bytes) {
         DataReader dataReader = DataReader.typeOfByteArray(bytes);
-        return RequestLogPackLength.create(dataReader);
+        return RequestLogPack.create(dataReader);
     }
 
-    public List<RequestLogPackLength> readLogs(byte[] bytes) {
+    public List<RequestLogPack> readLogs(byte[] bytes) {
         DataReader dataReader = DataReader.typeOfByteArray(bytes);
-        return RequestLogPackLength.createLogs(dataReader);
+        return RequestLogPack.createLogs(dataReader);
     }
 
 }

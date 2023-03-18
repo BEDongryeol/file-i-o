@@ -5,7 +5,7 @@ import io.whatap.common.validation.annotation.MaxTime;
 import io.whatap.controller.message.response.ContentMessage;
 import io.whatap.controller.message.response.FlagMessage;
 import io.whatap.data.AbstractPack;
-import io.whatap.data.RequestLogPackLength;
+import io.whatap.data.RequestLogPack;
 import io.whatap.dto.RequestPackDTO;
 import io.whatap.service.AbstractLogService;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Min;
 import java.io.IOException;
 
 /**
@@ -70,8 +69,8 @@ public class RequestLogController {
 
     // Step5. 고정 길이 데이터 N개 조회
     @GetMapping("/{startIndex}/to/{count}")
-    public ResponseEntity<ContentMessage<RequestLogPackLength>> readRequestLogsFromTo(@PathVariable int startIndex,
-                                                                                      @PathVariable @MaxCount int count) {
+    public ResponseEntity<ContentMessage<RequestLogPack>> readRequestLogsFromTo(@PathVariable int startIndex,
+                                                                                @PathVariable @MaxCount int count) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ContentMessage<>(
                         abstractLogService.readRequestLogsFromTo(startIndex, count)
@@ -80,8 +79,8 @@ public class RequestLogController {
 
     // Step6. 고정길이 데이터 시간으로 조회하고
     @GetMapping("from/{startTime}/to/{endTime}")
-    public ResponseEntity<ContentMessage<RequestLogPackLength>> readRequestLogsFromTo(@PathVariable long startTime,
-                                                                                      @PathVariable long endTime) {
+    public ResponseEntity<ContentMessage<RequestLogPack>> readRequestLogsFromTo(@PathVariable long startTime,
+                                                                                @PathVariable long endTime) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ContentMessage<>(
                         abstractLogService.readRequestLogsByTimeBetween(startTime, endTime)

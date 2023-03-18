@@ -2,7 +2,7 @@ package io.whatap;
 
 import io.whatap.data.AbstractPack;
 import io.whatap.data.ApplicationLogPack;
-import io.whatap.data.RequestLogPackLength;
+import io.whatap.data.RequestLogPack;
 import io.whatap.data.ServerLogPack;
 import io.whatap.dto.RequestPackDTO;
 import io.whatap.io.data.DataReader;
@@ -51,12 +51,12 @@ public class AbstractPackIOTest {
 
     @Test
     public void 와탭_서버로_전송되는_객체를_바이트_배열로_전환_하고_복원할_수_있다() {
-        RequestLogPackLength before = RequestLogPackLength.valueOf(new RequestPackDTO(projectCode, agentId, time, status, responseTime));
+        RequestLogPack before = RequestLogPack.valueOf(new RequestPackDTO(projectCode, agentId, time, status, responseTime));
         DataWriter dataWriter = DataWriter.typeOfByteArray();
         before.write(dataWriter);
         byte[] bytes = dataWriter.toByteArray();
         DataReader dataReader = DataReader.typeOfByteArray(bytes);
-        AbstractPack after = RequestLogPackLength.create(dataReader);
+        AbstractPack after = RequestLogPack.create(dataReader);
 
         assertEqualsAbstractPack(before, after);
         assertEqualsRequestLogPack(before, after);
@@ -95,11 +95,11 @@ public class AbstractPackIOTest {
     }
 
     private static void assertEqualsRequestLogPack(AbstractPack before, AbstractPack after) {
-        assertTrue(before instanceof RequestLogPackLength);
-        assertTrue(after instanceof RequestLogPackLength);
+        assertTrue(before instanceof RequestLogPack);
+        assertTrue(after instanceof RequestLogPack);
 
-        RequestLogPackLength beforeCasted = (RequestLogPackLength) before;
-        RequestLogPackLength afterCasted = (RequestLogPackLength) after;
+        RequestLogPack beforeCasted = (RequestLogPack) before;
+        RequestLogPack afterCasted = (RequestLogPack) after;
 
         assertEquals(beforeCasted.getStatus(), afterCasted.getStatus());
         assertEquals(beforeCasted.getResponseTime(), afterCasted.getResponseTime());

@@ -17,18 +17,18 @@ import java.util.List;
  */
 @Getter
 @ToString(callSuper = true)
-public class RequestLogPackLength extends FixedLengthAbstractPack {
+public class RequestLogPack extends FixedLengthAbstractPack {
 
     private int status;
     private long responseTime;
 
-    private RequestLogPackLength(long projectCode, int agentId, long time, int status, long responseTime) {
+    private RequestLogPack(long projectCode, int agentId, long time, int status, long responseTime) {
         super(time, projectCode, agentId);
         this.status = status;
         this.responseTime = responseTime;
     }
 
-    private RequestLogPackLength() {
+    private RequestLogPack() {
     }
 
     @Override
@@ -45,21 +45,21 @@ public class RequestLogPackLength extends FixedLengthAbstractPack {
         this.responseTime = dr.readLong();
     }
 
-    public static RequestLogPackLength valueOf(RequestPackDTO dto) {
-        return new RequestLogPackLength(dto.getProjectCode(), dto.getAgentId(), dto.getTime(), dto.getStatus(), dto.getResponseTime());
+    public static RequestLogPack valueOf(RequestPackDTO dto) {
+        return new RequestLogPack(dto.getProjectCode(), dto.getAgentId(), dto.getTime(), dto.getStatus(), dto.getResponseTime());
     }
 
-    public static RequestLogPackLength create(DataReader dataReader) {
-        RequestLogPackLength requestLog = new RequestLogPackLength();
+    public static RequestLogPack create(DataReader dataReader) {
+        RequestLogPack requestLog = new RequestLogPack();
         requestLog.read(dataReader);
         return requestLog;
     }
 
-    public static List<RequestLogPackLength> createLogs(DataReader dataReader) {
+    public static List<RequestLogPack> createLogs(DataReader dataReader) {
         int available = dataReader.available();
         int count = available / ByteLengthProvider.REQUEST_LOG_PACK;
 
-        List<RequestLogPackLength> logs = new ArrayList<>();
+        List<RequestLogPack> logs = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             logs.add(create(dataReader));
         }
