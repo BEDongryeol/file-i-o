@@ -1,18 +1,17 @@
-package io.whatap.io;
+package io.whatap.io.file;
 
 import io.whatap.common.io.exception.DataIOException;
-import io.whatap.common.io.exception.OutOfRangeException;
-import io.whatap.common.io.support.ByteArrayProvider;
-import io.whatap.data.AbstractPack;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 
-public class FileReader {
-
-    private FileReader() {}
+/**
+ * Copyright whatap Inc since 2023/03/18
+ * Created by Larry on 2023/03/18
+ * Email : inwoo.server@gmail.com
+ */
+public class SequentialReader {
 
     public static byte[] readAll(InputStream fin) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -45,15 +44,4 @@ public class FileReader {
         return bos.toByteArray();
     }
 
-    public static byte[] readBytesAt(RandomAccessFile file, int index, Class<? extends AbstractPack> type) {
-        byte[] bytes = ByteArrayProvider.getByteArray(type);
-
-        try {
-            file.seek((long) bytes.length * index);
-            file.readFully(bytes);
-        } catch (IOException e) {
-            throw new OutOfRangeException("파일의 읽을 수 있는 범위를 초과하였습니다. --- 요청 index : " + index);
-        }
-        return bytes;
-    }
 }
