@@ -14,7 +14,8 @@ public enum MessageCode {
 
     SPRING_LAYER_EXCEPTION(4040, message -> "SERVLET_LAYER_EXCEPTION : " + message),
     REPOSITORY_LAYER_EXCEPTION(4041, message -> "REPOSITORY_LAYER_EXCEPTION : " + message),
-    SERVICE_LAYER_EXCEPTION(4042, message -> "SERVICE_LAYER_EXCEPTION : " + message);
+    SERVICE_LAYER_EXCEPTION(4042, message -> "SERVICE_LAYER_EXCEPTION : " + message),
+    PRESENTATION_LAYER_EXCEPTION(4043, message -> "PRESENTATION_LAYER_EXCEPTION : " + message);
 
     private final int code;
     private final Function<String, String> expressionMessage;
