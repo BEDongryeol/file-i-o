@@ -18,7 +18,7 @@ import java.io.RandomAccessFile;
 @Repository
 public class FileRepository {
 
-    public File loadFileByName(String fileName) {
+    public File getFile(String fileName) {
         File file;
         ClassPathResource resource = new ClassPathResource(fileName);
 
@@ -31,15 +31,17 @@ public class FileRepository {
         return file;
     }
 
-    public RandomAccessFile loadRandomAccessFileByNameReadOnly(String fileName) {
+    public RandomAccessFile getRandomAccessFile(String fileName) {
+
         RandomAccessFile randomAccessFile;
 
         try {
-            randomAccessFile = new RandomAccessFile(loadFileByName(fileName), FileAccessMode.READ_ONLY.getMode());
+            randomAccessFile = new RandomAccessFile(getFile(fileName), FileAccessMode.READ_ONLY.getMode());
         } catch (FileNotFoundException e) {
             throw new FileLoadException("해당 파일이 존재하지 않습니다. fileName : " + fileName);
         }
 
         return randomAccessFile;
     }
+
 }
