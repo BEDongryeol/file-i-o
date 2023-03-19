@@ -1,14 +1,14 @@
 package io.whatap.repository;
 
 import io.whatap.common.io.exception.FileLoadException;
+import io.whatap.common.io.exception.RetryFailedException;
 import io.whatap.common.io.support.FileAccessMode;
+import io.whatap.io.file.FileWriter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 
 /**
  * Copyright whatap Inc since 2023/03/07
@@ -16,32 +16,40 @@ import java.io.RandomAccessFile;
  * Email : inwoo.server@gmail.com
  */
 @Repository
+@Slf4j
 public class FileRepository {
 
-    public File getFile(String fileName) {
-        File file;
-        ClassPathResource resource = new ClassPathResource(fileName);
-
+    public File getFileByName(String fileName) {
         try {
-            file = resource.getFile();
+            ClassPathResource resource = new ClassPathResource(fileName);
+            return resource.getFile();
         } catch (IOException e) {
-            throw new FileLoadException("해당 파일이 존재하지 않습니다. fileName : " + fileName);
+            return createAndGetFile(fileName);
+        }
+    }
+
+    public File createAndGetFile(String fileName) {
+        int maxRetry = 5;
+
+        while (maxRetry-- > 0) {
+            log.info("파일이 존재하지 않아 생성을 시도합니다. --- fileName : " + fileName);
+
+            if (FileWriter.createFile(fileName)) {
+                log.info("파일이 성공적으로 생성되었습니다. --- fileName : " + fileName);
+                return getFileByName(fileName);
+            }
         }
 
-        return file;
+        throw new RetryFailedException();
     }
 
     public RandomAccessFile getRandomAccessFile(String fileName) {
-
-        RandomAccessFile randomAccessFile;
-
         try {
-            randomAccessFile = new RandomAccessFile(getFile(fileName), FileAccessMode.READ_ONLY.getMode());
+            return new RandomAccessFile(getFileByName(fileName), FileAccessMode.READ_ONLY.getMode());
         } catch (FileNotFoundException e) {
             throw new FileLoadException("해당 파일이 존재하지 않습니다. fileName : " + fileName);
         }
-
-        return randomAccessFile;
     }
+
 
 }
