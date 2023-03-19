@@ -1,8 +1,10 @@
 package io.whatap.common.handler;
 
+import io.whatap.common.data.exception.IllegalDataTypeException;
 import io.whatap.common.data.exception.NotFoundLogException;
 import io.whatap.common.io.exception.IllegalInputStreamException;
 import io.whatap.common.io.exception.OutOfRangeException;
+import io.whatap.common.io.exception.RetryFailedException;
 import io.whatap.controller.message.MessageCode;
 import io.whatap.controller.message.response.ErrorMessage;
 import io.whatap.controller.message.response.ResponseMessage;
@@ -49,7 +51,7 @@ public class LogControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {
-            OutOfRangeException.class
+            OutOfRangeException.class, IllegalDataTypeException.class, RetryFailedException.class
     })
     public ResponseEntity<? extends ResponseMessage> serviceExceptionHandler(Exception e, HttpServletRequest request) {
         log.error("messageCode : {} ----- message : {} ----- exception : {} ----- method : {}, ----- request URI : {}",
