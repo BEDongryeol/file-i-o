@@ -1,5 +1,5 @@
 <details>
-<summary>Step 0</summary>
+<summary>1주차 </summary>
 <div markdown="1">
 
 **기본 지식**
@@ -141,6 +141,125 @@
     - read()를 사용하면 파일 끝에 도달하면 -1이 return
     - readFully()는 EOFException 발생
     - 데이터를 고정 길이만큼 읽지 못하고, -1이 발생하면 의도치 않은 객체가 생성될 수 있으므로 readFully() 사용
+
+---
+
+</div>
+</details>
+
+<details>
+<summary>2주차 사전 정리</summary>
+<div markdown="1">
+
+## TODO
+
+- BinarySearch 최적화
+- 피드백 반영
+
+|                      |     RandomAccessFile     | vs.  |                         FileChannel                          |
+| :------------------: | :----------------------: | :--: | :----------------------------------------------------------: |
+|    특정 위치 접근    | random하게 접근 (seek()) |  >   | FileChannel -> FileChannelImpl -> IOUtils -> FileDispatcherImpl -> native method (절대 위치로 읽어온다) |
+|  데이터 전송 (횟수)  |  1바이트 * 데이터 크기   |  <   |                            버퍼링                            |
+|      IO (횟수)       |  1바이트 * 데이터 크기   |  <   |                             1번                              |
+| 데이터 읽어오는 방법 |   jvm - os (byte[] 등)   |  <   | DirectBuffer 가능 (FileChannelImpl에서 NativeThread를 추가해서 초과 시 2배로, 최초 NativeThreadSet : 2개) |
+|      대용량처리      |                          |  <   |                         block, chunk                         |
+
+- RandomAccessFile이 데이터 탐색 시 random하게 접근하는데에 최적화된 클래스이고, position은 비교적 크기가 작은 데이터이므로  RandomAccessFile 선택
+
+- RandomAccessFile : 단일 데이터 조회, position (index)
+- FileChannel : 여러 개 데이터 조회
+
+### Step4. 시간으로 고정길이 데이터 1개의 position 조회하기
+
+- **프로세스**
+  - RandomAccesFile에서 binarySearch를 통해 데이터 position 찾기
+
+    - 데이터가 존재할 때 : return
+
+    - 데이터가 존재하지 않을 때
+      - 특정 값을 전달 : `-1` 등을 전달해주면 정상처리된 줄 알고 해당 값을 사용하는 다른 프로세스에서 에러 발생 가능
+      - **빈 값을 전달 : Optional을 통한 처리 가능**
+
+    - IOException, EOFException이 발생했을 때
+
+### Step5. 고정길이 데이터 M번째부터 연속된 K개 조회하기
+
+- 최대 1024개로 제한, 설정된 ByteBufferPool의 사이즈로 수정 가능
+
+- **프로세스**
+
+  - RandomAccesFile에서 binarySearch를 통해 데이터 position 찾기 (Step4의 메소드 재사용)
+
+    - 데이터가 존재할 때
+
+      - ```
+        do {
+        	seek(position);
+        	readFully(long size byte);
+        	position += dataFixedSize;
+        	n--;
+        } while (n > 0)
+        ```
+
+      - 중간에 EOF 등이 발생했을 때는 log로 찍고, 지금까지 저장한 데이터만 return
+
+    - 데이터가 존재하지 않을 때
+
+    - EOF Exception이 발생했을 때 
+
+      - 중간에 EOF 등이 발생했을 때는 log로 찍고, 지금까지 저장한 데이터만 return
+
+**시작점(position)을 찾을 때는 RandomAccessFile**
+
+**인덱스를 받아와서 여러 값을 동시에 읽으려면 pointer를 이동, 읽기를 하는 RandomAccessFile이 아닌 FileChannel을 통해 비동기로 한 번에 다 읽어 오기**
+
+
+
+Step3에서 사용한 고정 길이 데이터 1개 조회하는 거 -> 몇 번 째 데이터인지 알고 있어야한다.\
+
+- 메소드
+
+  1. 데이터의 position을 return 해주는 메소드
+
+  2. FileChannel을 통해 절대 위치에 데이터를 write하는 메소드
+
+     - 1번 메소드를 사용하고 있어도 position에 관계 없이 절대 위치에 write 할 수 있으므로 처리 가능
+
+     - #### readBytesAt은 channel을 사용하자.
+
+  3. 데이터 길이를 효율적으로 읽어 들일 수 있는 방법
+
+     1. ByteArrayProvider : 데이터가 변경되면 이전 데이터를 읽어올 때 충돌 발생
+
+     2. 데이터를 저장할 때 메타데이터도 같이 저장
+
+        1. 데이터 제일 앞에 메타데이터 삽입
+
+           - 문제점
+
+             1. Channel을 사용하면 ByteBuffer를 매번 생성
+                - 해결 가능 여부 : ByteBuffer.slice()로 할당해놓은 버퍼 사용? 
+
+             2. 메타데이터 저장으로 용량 증가
+                - 32byte + 알파
+
+             3. `기존 데이터에 메타데이터가 없을 경우?`
+
+        2. 파일의 0번 라인에 저장해서 파일 분할?
+
+           - 문제점
+             - 기존 로직에 영향을 미칠 수 있음
+
+- 현재 문제점
+
+  - **FileReader**
+    - ByteBuffer에서 byte를 읽어올 때 byteBuffer.limit으로 크기를 지정하는데 객체 별 크기를 지정해주어야함
+    - 어떤 클래스를 몇 개 가져올 지 추가해주어야 할 듯
+    - **DTO로 해결**
+
+### Step6. 시간 범위에 맞는 데이터 조회
+
+- 시간 범위를 현재까지로 validation
 
 </div>
 </details>
