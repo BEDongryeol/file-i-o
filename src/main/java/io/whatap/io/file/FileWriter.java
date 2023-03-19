@@ -8,7 +8,7 @@ public class FileWriter {
 
     private FileWriter(){}
 
-    public static void save(File file, byte[] bytes, boolean append){
+    public static Boolean save(File file, byte[] bytes, boolean append){
         if (file.exists() == false) {
             file.mkdirs();
         }
@@ -18,5 +18,6 @@ public class FileWriter {
         } catch (IOException e) {
             throw new DataIOException(e);
         }
+        return Boolean.TRUE;
     }
 }

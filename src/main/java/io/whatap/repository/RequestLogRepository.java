@@ -29,8 +29,7 @@ public class RequestLogRepository {
         DataWriter dataWriter = DataWriter.typeOfByteArray();
         log.write(dataWriter);
 
-        FileWriter.save(file, dataWriter.toByteArray(), true);
-        return file.exists();
+        return FileWriter.save(file, dataWriter.toByteArray(), true);
     }
 
     public RequestLogPack read(byte[] bytes) {
