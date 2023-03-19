@@ -7,7 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -50,6 +52,21 @@ public class FileRepositoryTest {
     }
 
     @Test
+    public void createFileTest() throws IOException {
+
+        String fileName = "test-create-file.db";
+        File file1 = new File(fileName);
+
+
+        if (!file1.exists()) {
+            if (file1.createNewFile()) {
+                System.out.println("성공");
+            }
+        }
+
+    }
+
+    @Test
     public void testing() throws Exception {
         // given
         RandomAccessFile raf = fileRepository.getRandomAccessFile(REQUEST_FILE_NAME);
@@ -60,7 +77,7 @@ public class FileRepositoryTest {
         // when
         System.out.println("totalDataSize = " + totalDataSize);
 
-        long index = binarySearch(raf,target);
+        long index = binarySearch(raf, target);
         raf.seek(index);
         raf.readFully(objectBytes);
 
@@ -80,7 +97,7 @@ public class FileRepositoryTest {
         System.out.println("totalDataSize = " + totalDataSize);
 
         // when
-        long index = binarySearchWithChannel(raf,target);
+        long index = binarySearchWithChannel(raf, target);
         raf.seek(index);
         raf.readFully(objectBytes);
 
@@ -123,7 +140,7 @@ public class FileRepositoryTest {
         FileChannel channel = raf.getChannel();
         long fileSize = channel.size();
         long left = 0;
-        long right = fileSize  - 1;
+        long right = fileSize - 1;
 
         while (left <= right) {
             long mid = (left + right) / 2;
