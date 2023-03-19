@@ -1,9 +1,9 @@
 package io.whatap.common.util;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Supplier;
 
@@ -14,18 +14,23 @@ import java.util.function.Supplier;
  */
 public class DateTimeUtil {
     private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
 
     public static String toString(LocalDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN));
+    }
+
+    public static String toString(LocalDate localDate) {
+        return localDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
     }
 
     public static Long toLong(LocalDateTime dateTime) {
         return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
-    public static LocalDateTime toLocalDateTime(long epochTime) {
+    public static LocalDate toLocalDate(long epochTime) {
         return Instant.ofEpochMilli(epochTime)
-                .atZone(ZoneId.systemDefault()).toLocalDateTime();
+                .atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     public static Long getNowUnixTime() {
