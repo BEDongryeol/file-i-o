@@ -27,7 +27,7 @@ public class FileService {
     }
 
     public byte[] readAll(String fileName) throws IOException {
-        File file = fileRepository.getFile(fileName);
+        File file = fileRepository.getFileByName(fileName);
         return SequentialReader.readAll(Files.newInputStream(file.toPath()));
     }
 

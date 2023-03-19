@@ -58,12 +58,21 @@ public class RequestLogController {
                 ));
     }
 
-    // Step4. 시간으로 데이터 조회
+    // Step4-1. 시간으로 데이터 조회 (기존 요구 사항)
     @GetMapping("/time/{time}")
     public ResponseEntity<ContentMessage<AbstractPack>> readRequestLogByTime(@PathVariable @MaxTime long time) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ContentMessage<>(
                         abstractLogService.readRequestLogByTime(time)
+                ));
+    }
+
+    // Step4-2. 시간으로 데이터 조회 (rolling 파일)
+    @GetMapping("/time/{time}/rolling")
+    public ResponseEntity<ContentMessage<AbstractPack>> readRequestLogByTimeFromRollingFile(@PathVariable @MaxTime long time) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ContentMessage<>(
+                        abstractLogService.readRequestLogByTimeFromRollingFile(time)
                 ));
     }
 
@@ -77,7 +86,7 @@ public class RequestLogController {
                 ));
     }
 
-    // Step6. 고정길이 데이터 시간으로 조회하고
+    // Step6. 고정길이 데이터 시간 범위로 조회
     @GetMapping("from/{startTime}/to/{endTime}")
     public ResponseEntity<ContentMessage<RequestLogPack>> readRequestLogsFromTo(@PathVariable long startTime,
                                                                                 @PathVariable long endTime) {

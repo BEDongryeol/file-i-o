@@ -24,7 +24,7 @@ public class RequestLogRepository {
     }
 
     public Boolean save(String fileName, RequestLogPack log) {
-        File file = fileRepository.getFile(fileName);
+        File file = fileRepository.getFileByName(fileName);
 
         DataWriter dataWriter = DataWriter.typeOfByteArray();
         log.write(dataWriter);
