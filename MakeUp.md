@@ -1,5 +1,9 @@
 ## Feedback 반영
 
+### 0. 요청 성공 시 Logging
+- API 요청, 응답 시 로그에 관한 Filter 추가
+- 에러 : handler
+
 ### 1. RequestLogRepository
 
 - 데이터가 저장되고 로직이 정상적으로 수행되면 Boolean.TRUE
