@@ -113,7 +113,7 @@
 - 3번의 FileLoader에서 IOException 발생 시 catch하여 `FileLoadException(custom exception)` throw 
   
 > 3. Repository에서 File 조회시 발생하는 중복 코드 처리
-- io.whatap.repository.FileRepository
+- io.file.repository.FileRepository
 
 > 4. 새로운 db 파일 (log-request.db) 생성
 - 기존 db 파일에 저장되는 데이터와 길이가 다르기 때문에 별도 파일에 데이터 저장
